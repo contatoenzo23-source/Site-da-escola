@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Empréstimos - Biblioteca Escolar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1e40af;
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            border-color: #3b82f6;
+            background: #f0f7ff;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            color: #64748b;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        /* Search */
+        .search-container {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        /* Books Grid */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .book-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .book-author {
+            color: #64748b;
+            margin-bottom: 12px;
+        }
+
+        .book-description {
+            color: #475569;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .book-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .book-category {
+            font-size: 0.9rem;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-available {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-unavailable {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-primary:disabled {
+            background: #93c5fd;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+
+        .btn-outline:hover {
+            background: #f0f7ff;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .modal-content {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Requests */
+        .request-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .request-title {
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .request-author {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .request-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 12px;
+            color: #3b82f6;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .request-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        :focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        /* Loading states */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Sistema de Empréstimos</h1>
+            <p class="subtitle">Biblioteca Escolar - Gerencie solicitações de forma digital</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('student')">
+                <span class="icon">👨‍🎓</span>
+                Área do Aluno
+            </button>
+            <button class="tab-btn" onclick="showTab('librarian')">
+                <span class="icon">📚</span>
+                Área da Bibliotecária
+            </button>
+        </div>
+
+        <!-- Student Area -->
+        <div id="student-area">
+            <!-- Search Section -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Buscar Livros</h2>
+                    <p class="card-description">Encontre livros disponíveis para empréstimo</p>
+                </div>
+                <div class="card-content">
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input 
+                            type="text" 
+                            class="search-input" 
+                            placeholder="Buscar por título, autor ou categoria..."
+                            oninput="filterBooks(this.value)"
+                            aria-label="Buscar livros"
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Books List -->
+            <div class="books-grid" id="books-container">
+                <!-- Books will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Librarian Area -->
+        <div id="librarian-area" style="display: none;">
+            <!-- Loan Requests -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Solicitações de Empréstimo</h2>
+                    <p class="card-description">Gerencie as solicitações pendentes de aprovação</p>
+                </div>
+                <div class="card-content">
+                    <div id="requests-container">
+                        <!-- Requests will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Estatísticas</h2>
+                </div>
+                <div class="card-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-number" id="total-books">0</div>
+                            <div class="stat-label">Livros no Acervo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-number" id="active-loans">0</div>
+                            <div class="stat-label">Empréstimos Ativos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-number" id="pending-requests">0</div>
+                            <div class="stat-label">Solicitações Pendentes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-number" id="rejected-requests">0</div>
+                            <div class="stat-label">Solicitações Rejeitadas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Request Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Solicitar Empréstimo</h3>
+                <p class="card-description">Preencha seus dados para solicitar o livro</p>
+            </div>
+            <div class="modal-content">
+                <form id="loan-form">
+                    <div class="form-group">
+                        <label class="form-label" for="student-name">Nome Completo *</label>
+                        <input type="text" class="form-input" id="student-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-id">Número de Matrícula *</label>
+                        <input type="text" class="form-input" id="student-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-email">Email</label>
+                        <input type="email" class="form-input" id="student-email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-phone">Telefone</label>
+                        <input type="tel" class="form-input" id="student-phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="submitLoanRequest()">Confirmar Solicitação</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const books = [
+            {
+                id: '1',
+                title: 'Dom Casmurro',
+                author: 'Machado de Assis',
+                isbn: '978-853590',
+                category: 'Literatura Brasileira',
+                available: true,
+                description: 'Romance clássico da literatura brasileira que explora temas como ciúme e traição.'
+            },
+            {
+                id: '2',
+                title: 'O Cortiço',
+                author: 'Aluísio Azevedo',
+                isbn: '978-857326',
+                category: 'Naturalismo',
+                available: true,
+                description: 'Obra fundamental do naturalismo brasileiro, retratando a vida em um cortiço carioca.'
+            },
+            {
+                id: '3',
+                title: 'Vidas Secas',
+                author: 'Graciliano Ramos',
+                isbn: '978-850101',
+                category: 'Regionalismo',
+                available: false,
+                description: 'Romance que retrata a vida difícil de uma família de retirantes no sertão nordestino.'
+            },
+            {
+                id: '4',
+                title: 'Iracema',
+                author: 'José de Alencar',
+                isbn: '978-857232',
+                category: 'Romantismo',
+                available: true,
+                description: 'Lenda do Ceará que narra o amor entre a índia Iracema e o português Martim.'
+            }
+        ];
+
+        let loanRequests = [];
+        let selectedBook = null;
+
+        // Initialize the page
+        function init() {
+            renderBooks(books);
+            updateStatistics();
+        }
+
+        // Show/hide tabs
+        function showTab(tabName) {
+            const studentArea = document.getElementById('student-area');
+            const librarianArea = document.getElementById('librarian-area');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            if (tabName === 'student') {
+                studentArea.style.display = 'block';
+                librarianArea.style.display = 'none';
+                tabButtons[0].classList.add('active');
+            } else {
+                studentArea.style.display = 'none';
+                librarianArea.style.display = 'block';
+                tabButtons[1].classList.add('active');
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Filter books based on search term
+        function filterBooks(searchTerm) {
+            const filtered = books.filter(book =>
+                book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                book.category.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderBooks(filtered);
+        }
+
+        // Render books list
+        function renderBooks(booksToRender) {
+            const container = document.getElementById('books-container');
+            container.innerHTML = '';
+
+            booksToRender.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.innerHTML = `
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">por ${book.author}</p>
+                    <p class="book-description">${book.description}</p>
+                    <div class="book-footer">
+                        <span class="book-category">${book.category}</span>
+                        <span class="status-badge ${book.available ? 'status-available' : 'status-unavailable'}">
+                            ${book.available ? 'Disponível' : 'Indisponível'}
+                        </span>
+                    </div>
+                `;
+
+                if (book.available) {
+                    bookCard.addEventListener('click', () => openModal(book));
+                    bookCard.style.cursor = 'pointer';
+                } else {
+                    bookCard.style.cursor = 'not-allowed';
+                    bookCard.style.opacity = '0.7';
+                }
+
+                container.appendChild(bookCard);
+            });
+        }
+
+        // Open modal for loan request
+        function openModal(book) {
+            selectedBook = book;
+            const modal = document.getElementById('modal-overlay');
+            const modalTitle = document.querySelector('.modal-title');
+            
+            modalTitle.textContent = `Solicitar Empréstimo - ${book.title}`;
+            modal.style.display = 'flex';
+            
+            // Reset form
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-id').value = '';
+            document.getElementById('student-email').value = '';
+            document.getElementById('student-phone').value = '';
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = 'none';
+            selectedBook = null;
+        }
+
+        // Submit loan request
+        function submitLoanRequest() {
+            const name = document.getElementById('student-name').value.trim();
+            const studentId = document.getElementById('student-id').value.trim();
+
+            if (!name || !studentId) {
+                alert('Por favor, preencha pelo menos o nome e número de matrícula.');
+                return;
+            }
+
+            const newRequest = {
+                id: Date.now().toString(),
+                bookId: selectedBook.id,
+                studentName: name,
+                studentId: studentId,
+                studentEmail: document.getElementById('student-email').value.trim(),
+                studentPhone: document.getElementById('student-phone').value.trim(),
+                requestDate: new Date().toLocaleDateString('pt-BR'),
+                status: 'pending'
+            };
+
+            loanRequests.push(newRequest);
+            closeModal();
+            
+            // Show success message
+            alert('Solicitação enviada com sucesso! A bibliotecária irá analisar sua solicitação.');
+        }
+
+        // Render loan requests
+        function renderRequests() {
+            const container = document.getElementById('requests-container');
+            container.innerHTML = '';
+
+            if (loanRequests.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align: center; color: #64748b; padding: 40px;">
+                        Nenhuma solicitação de empréstimo encontrada.
+                    </p>
+                `;
+                return;
+            }
+
+            loanRequests.forEach(request => {
+                const book = books.find(b => b.id === request.bookId);
+                if (!book) return;
+
+                const requestCard = document.createElement('div');
+                requestCard.className = 'request-card';
+                requestCard.innerHTML = `
+                    <div class="request-header">
+                        <div>
+                            <h4 class="request-title">${book.title}</h4>
+                            <p class="request-author">por ${book.author}</p>
+                        </div>
+                        <span class="request-status ${'status-' + request.status}">
+                            ${request.status === 'pending' ? 'Pendente' : 
+                              request.status === 'approved' ? 'Aprovado' : 'Rejeitado'}
+                        </span>
+                    </div>
+                    <div class="request-details">
+                        <div class="detail-item">
+                            <span>👤</span>
+                            ${request.studentName} (Matrícula: ${request.studentId})
+                        </div>
+                        ${request.studentEmail ? `
+                        <div class="detail-item">
+                            <span>📧</span>
+                            ${request.studentEmail}
+                        </div>
+                        ` : ''}
+                        ${request.studentPhone ? `
+                        <div class="detail-item">
+                            <span>📞</span>
+                            ${request.studentPhone}
+                        </div>
+                        ` : ''}
+                        <div class="detail-item">
+                            <span>📅</span>
+                            Solicitado em: ${request.requestDate}
+                        </div>
+                        ${request.dueDate ? `
+                        <div class="detail-item">
+                            <span>⏰</span>
+                            Devolução: ${request.dueDate}
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${request.status === 'pending' ? `
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm" onclick="approveRequest('${request.id}')">
+                            ✅ Aprovar
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="rejectRequest('${request.id}')">
+                            ❌ Rejeitar
+                        </button>
+                    </div>
+                    ` : ''}
+                `;
+
+                container.appendChild(requestCard);
+            });
+        }
+
+        // Approve request
+        function approveRequest(requestId) {
+            const request = loanRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'approved';
+                request.dueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR');
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Reject request
+        function rejectRequest(requestId) {
+            const request = loanRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'rejected';
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            document.getElementById('total-books').textContent = books.length;
+            document.getElementById('active-loans').textContent = 
+                loanRequests.filter(r => r.status === 'approved').length;
+            document.getElementById('pending-requests').textContent = 
+                loanRequests.filter(r => r.status === 'pending').length;
+            document.getElementById('rejected-requests').textContent = 
+                loanRequests.filter(r => r.status === 'rejected').length;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') {
+                closeModal();
+            }
+        });
+
+        // Initialize the application
+        window.onload = init;
+    </script>
+</body>
+</html>
