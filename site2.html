@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Book</title>
+    <style>
+        /* (todo o seu CSS continua igual, não mexi) */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Sistema de Empréstimos</h1>
+            <p class="subtitle">Biblioteca Escolar - Gerencie solicitações de forma digital</p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('student')">
+                <span class="icon">👨‍🎓</span>
+                Área do Aluno
+            </button>
+            <button class="tab-btn" onclick="showTab('librarian')">
+                <span class="icon">📚</span>
+                Área da Bibliotecária
+            </button>
+        </div>
+
+        <!-- Student Area -->
+        <div id="student-area">
+            <!-- (sua área do aluno continua igual) -->
+        </div>
+
+        <!-- Librarian Area -->
+        <div id="librarian-area" style="display: none;">
+            
+            <!-- BLOQUEIO DE SENHA -->
+            <div id="librarian-lock" style="text-align:center; margin-top:50px;">
+                <h2>Área Restrita</h2>
+                <p>Digite a senha para acessar:</p>
+                <input type="password" id="senhaBibliotecaria" placeholder="Senha">
+                <button class="btn btn-primary" onclick="desbloquearBibliotecaria()">Entrar</button>
+                <p id="msgErro" style="color:red; font-weight:bold;"></p>
+            </div>
+
+            <!-- CONTEÚDO DA BIBLIOTECÁRIA -->
+            <div id="librarian-content" style="display:none;">
+                <!-- Loan Requests -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Solicitações de Empréstimo</h2>
+                        <p class="card-description">Gerencie as solicitações pendentes de aprovação</p>
+                    </div>
+                    <div class="card-content">
+                        <div id="requests-container">
+                            <!-- Requests will be dynamically inserted here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Estatísticas</h2>
+                    </div>
+                    <div class="card-content">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">📚</div>
+                                <div class="stat-number" id="total-books">0</div>
+                                <div class="stat-label">Livros no Acervo</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">✅</div>
+                                <div class="stat-number" id="active-loans">0</div>
+                                <div class="stat-label">Empréstimos Ativos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⏰</div>
+                                <div class="stat-number" id="pending-requests">0</div>
+                                <div class="stat-label">Solicitações Pendentes</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">❌</div>
+                                <div class="stat-number" id="rejected-requests">0</div>
+                                <div class="stat-label">Solicitações Rejeitadas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- FIM DO CONTEÚDO DA BIBLIOTECÁRIA -->
+        </div>
+    </div>
+
+    <!-- Loan Request Modal -->
+    <!-- (continua igual o seu código do modal) -->
+
+    <script>
+        // senha fixa
+        const senhaBibliotecaria = "1234";
+
+        function desbloquearBibliotecaria() {
+            const senha = document.getElementById("senhaBibliotecaria").value;
+            const msg = document.getElementById("msgErro");
+            if (senha === senhaBibliotecaria) {
+                document.getElementById("librarian-lock").style.display = "none";
+                document.getElementById("librarian-content").style.display = "block";
+                msg.textContent = "";
+            } else {
+                msg.textContent = "Senha incorreta!";
+            }
+        }
+
+        // (seu código JS continua igual, só acrescentei a função acima)
+    </script>
+</body>
+</html>
