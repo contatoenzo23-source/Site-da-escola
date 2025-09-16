@@ -517,17 +517,28 @@
                 <!-- Books will be dynamically inserted here -->
             </div>
         </div>
-<!-- BLOQUEIO DE ACESSO À ÁREA DA BIBLIOTECÁRIA -->
+<!-- BLOQUEIO -->
 <div id="acesso-bibliotecaria">
   <h3>🔒 Acesso Restrito</h3>
-  <p>Digite a senha para acessar a área da bibliotecária:</p>
   <input type="password" id="senha-bibliotecaria" placeholder="Senha">
   <button onclick="desbloquearArea()">Entrar</button>
 </div>
 
-<!-- Área da bibliotecária (começa oculta) -->
+<!-- ÁREA DA BIBLIOTECÁRIA -->
 <div id="librarian-area" style="display: none;">
-  <!-- Seu conteúdo exclusivo aqui -->
+  <h2>📁 Área da Bibliotecária</h2>
+  <p>Bem-vinda! Aqui estão os relatórios e ferramentas de gestão.</p>
+  <!-- Loan Requests -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Solicitações de Empréstimo</h2>
+                    <p class="card-description">Gerencie as solicitações pendentes de aprovação</p>
+                </div>
+                <div class="card-content">
+                    <div id="requests-container">
+                        <!-- Requests will be dynamically inserted here -->
+                    </div>
+                </div>
 </div>
 
 <script>
@@ -543,6 +554,7 @@
     }
   }
 </script>
+
 
 
         <!-- Librarian Area -->
@@ -911,6 +923,7 @@
 </body>
 
 </html>
+
 
 
 
