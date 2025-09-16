@@ -529,6 +529,10 @@
   <h2>📁 Área da Bibliotecária</h2>
   <p>Bem-vinda! Aqui estão os relatórios e ferramentas de gestão.</p>
    <!-- Loan Requests -->
+
+        <!-- Librarian Area -->
+        <div id="librarian-area" style="display: none;">
+            <!-- Loan Requests -->
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Solicitações de Empréstimo</h2>
@@ -607,8 +611,292 @@
             </div>
         </div>
     </div>
-                
-</div>
+
+    <script>
+        // Sample data
+        const books = [
+            {
+                id: '1',
+                title: 'Dom Casmurro',
+                author: 'Machado de Assis',
+                isbn: '978-853590',
+                category: 'Literatura Brasileira',
+                available: true,
+                description: 'Romance clássico da literatura brasileira que explora temas como ciúme e traição.'
+            },
+            {
+                id: '2',
+                title: 'O Cortiço',
+                author: 'Aluísio Azevedo',
+                isbn: '978-857326',
+                category: 'Naturalismo',
+                available: true,
+                description: 'Obra fundamental do naturalismo brasileiro, retratando a vida em um cortiço carioca.'
+            },
+            {
+                id: '3',
+                title: 'Vidas Secas',
+                author: 'Graciliano Ramos',
+                isbn: '978-850101',
+                category: 'Regionalismo',
+                available: false,
+                description: 'Romance que retrata a vida difícil de uma família de retirantes no sertão nordestino.'
+            },
+            {
+                id: '4',
+                title: 'Iracema',
+                author: 'José de Alencar',
+                isbn: '978-857232',
+                category: 'Romantismo',
+                available: true,
+                description: 'Lenda do Ceará que narra o amor entre a índia Iracema e o português Martim.'
+            }
+        ];
+
+        let loanRequests = [];
+        let selectedBook = null;
+
+        // Initialize the page
+        function init() {
+            renderBooks(books);
+            updateStatistics();
+        }
+
+        // Show/hide tabs
+        function showTab(tabName) {
+            const studentArea = document.getElementById('student-area');
+            const librarianArea = document.getElementById('librarian-area');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            if (tabName === 'student') {
+                studentArea.style.display = 'block';
+                librarianArea.style.display = 'none';
+                tabButtons[0].classList.add('active');
+            } else {
+                studentArea.style.display = 'none';
+                librarianArea.style.display = 'block';
+                tabButtons[1].classList.add('active');
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Filter books based on search term
+        function filterBooks(searchTerm) {
+            const filtered = books.filter(book =>
+                book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                book.category.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            renderBooks(filtered);
+        }
+
+        // Render books list
+        function renderBooks(booksToRender) {
+            const container = document.getElementById('books-container');
+            container.innerHTML = '';
+
+            booksToRender.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card';
+                bookCard.innerHTML = `
+                    <h3 class="book-title">${book.title}</h3>
+                    <p class="book-author">por ${book.author}</p>
+                    <p class="book-description">${book.description}</p>
+                    <div class="book-footer">
+                        <span class="book-category">${book.category}</span>
+                        <span class="status-badge ${book.available ? 'status-available' : 'status-unavailable'}">
+                            ${book.available ? 'Disponível' : 'Indisponível'}
+                        </span>
+                    </div>
+                `;
+
+                if (book.available) {
+                    bookCard.addEventListener('click', () => openModal(book));
+                    bookCard.style.cursor = 'pointer';
+                } else {
+                    bookCard.style.cursor = 'not-allowed';
+                    bookCard.style.opacity = '0.7';
+                }
+
+                container.appendChild(bookCard);
+            });
+        }
+
+        // Open modal for loan request
+        function openModal(book) {
+            selectedBook = book;
+            const modal = document.getElementById('modal-overlay');
+            const modalTitle = document.querySelector('.modal-title');
+            
+            modalTitle.textContent = `Solicitar Empréstimo - ${book.title}`;
+            modal.style.display = 'flex';
+            
+            // Reset form
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-id').value = '';
+            document.getElementById('student-email').value = '';
+            document.getElementById('student-phone').value = '';
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('modal-overlay');
+            modal.style.display = 'none';
+            selectedBook = null;
+        }
+
+        // Submit loan request
+        function submitLoanRequest() {
+            const name = document.getElementById('student-name').value.trim();
+            const studentId = document.getElementById('student-id').value.trim();
+
+            if (!name || !studentId) {
+                alert('Por favor, preencha pelo menos o nome e número de matrícula.');
+                return;
+            }
+
+            const newRequest = {
+                id: Date.now().toString(),
+                bookId: selectedBook.id,
+                studentName: name,
+                studentId: studentId,
+                studentEmail: document.getElementById('student-email').value.trim(),
+                studentPhone: document.getElementById('student-phone').value.trim(),
+                requestDate: new Date().toLocaleDateString('pt-BR'),
+                status: 'pending'
+            };
+
+            loanRequests.push(newRequest);
+            closeModal();
+            
+            // Show success message
+            alert('Solicitação enviada com sucesso! A bibliotecária irá analisar sua solicitação.');
+        }
+
+        // Render loan requests
+        function renderRequests() {
+            const container = document.getElementById('requests-container');
+            container.innerHTML = '';
+
+            if (loanRequests.length === 0) {
+                container.innerHTML = `
+                    <p style="text-align: center; color: #64748b; padding: 40px;">
+                        Nenhuma solicitação de empréstimo encontrada.
+                    </p>
+                `;
+                return;
+            }
+
+            loanRequests.forEach(request => {
+                const book = books.find(b => b.id === request.bookId);
+                if (!book) return;
+
+                const requestCard = document.createElement('div');
+                requestCard.className = 'request-card';
+                requestCard.innerHTML = `
+                    <div class="request-header">
+                        <div>
+                            <h4 class="request-title">${book.title}</h4>
+                            <p class="request-author">por ${book.author}</p>
+                        </div>
+                        <span class="request-status ${'status-' + request.status}">
+                            ${request.status === 'pending' ? 'Pendente' : 
+                              request.status === 'approved' ? 'Aprovado' : 'Rejeitado'}
+                        </span>
+                    </div>
+                    <div class="request-details">
+                        <div class="detail-item">
+                            <span>👤</span>
+                            ${request.studentName} (Matrícula: ${request.studentId})
+                        </div>
+                        ${request.studentEmail ? `
+                        <div class="detail-item">
+                            <span>📧</span>
+                            ${request.studentEmail}
+                        </div>
+                        ` : ''}
+                        ${request.studentPhone ? `
+                        <div class="detail-item">
+                            <span>📞</span>
+                            ${request.studentPhone}
+                        </div>
+                        ` : ''}
+                        <div class="detail-item">
+                            <span>📅</span>
+                            Solicitado em: ${request.requestDate}
+                        </div>
+                        ${request.dueDate ? `
+                        <div class="detail-item">
+                            <span>⏰</span>
+                            Devolução: ${request.dueDate}
+                        </div>
+                        ` : ''}
+                    </div>
+                    ${request.status === 'pending' ? `
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm" onclick="approveRequest('${request.id}')">
+                            ✅ Aprovar
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="rejectRequest('${request.id}')">
+                            ❌ Rejeitar
+                        </button>
+                    </div>
+                    ` : ''}
+                `;
+
+                container.appendChild(requestCard);
+            });
+        }
+
+        // Approve request
+        function approveRequest(requestId) {
+            const request = loanRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'approved';
+                request.dueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('pt-BR');
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Reject request
+        function rejectRequest(requestId) {
+            const request = loanRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = 'rejected';
+                renderRequests();
+                updateStatistics();
+            }
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            document.getElementById('total-books').textContent = books.length;
+            document.getElementById('active-loans').textContent = 
+                loanRequests.filter(r => r.status === 'approved').length;
+            document.getElementById('pending-requests').textContent = 
+                loanRequests.filter(r => r.status === 'pending').length;
+            document.getElementById('rejected-requests').textContent = 
+                loanRequests.filter(r => r.status === 'rejected').length;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('modal-overlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modal-overlay') {
+                closeModal();
+            }
+        });
+
+        // Initialize the application
+        window.onload = init;
+    </script>
+</body>
+
+</html>
+
 
 <script>
   function desbloquearArea() {
@@ -992,6 +1280,7 @@
 </body>
 
 </html>
+
 
 
 
