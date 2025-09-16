@@ -517,6 +517,27 @@
                 <!-- Books will be dynamically inserted here -->
             </div>
         </div>
+<!-- BLOQUEIO DE ACESSO À ÁREA DA BIBLIOTECÁRIA -->
+<div id="acesso-bibliotecaria">
+  <h3>🔒 Acesso Restrito</h3>
+  <p>Digite a senha para acessar a área da bibliotecária:</p>
+  <input type="password" id="senha-bibliotecaria" placeholder="Senha">
+  <button onclick="desbloquearArea()">Entrar</button>
+</div>
+
+<script>
+  function desbloquearArea() {
+    const senhaCorreta = "biblioteca2025"; // você pode alterar essa senha
+    const senhaDigitada = document.getElementById("senha-bibliotecaria").value;
+
+    if (senhaDigitada === senhaCorreta) {
+      document.getElementById("librarian-area").style.display = "block";
+      document.getElementById("acesso-bibliotecaria").style.display = "none";
+    } else {
+      alert("Senha incorreta. Tente novamente.");
+    }
+  }
+</script>
 
         <!-- Librarian Area -->
         <div id="librarian-area" style="display: none;">
@@ -884,5 +905,6 @@
 </body>
 
 </html>
+
 
 
