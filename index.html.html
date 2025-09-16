@@ -528,7 +528,7 @@
 <div id="librarian-area" style="display: none;">
   <h2>📁 Área da Bibliotecária</h2>
   <p>Bem-vinda! Aqui estão os relatórios e ferramentas de gestão.</p>
-  <!-- Loan Requests -->
+   <!-- Loan Requests -->
             <div class="card">
                 <div class="card-header">
                     <h2 class="card-title">Solicitações de Empréstimo</h2>
@@ -539,6 +539,75 @@
                         <!-- Requests will be dynamically inserted here -->
                     </div>
                 </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Estatísticas</h2>
+                </div>
+                <div class="card-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-number" id="total-books">0</div>
+                            <div class="stat-label">Livros no Acervo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-number" id="active-loans">0</div>
+                            <div class="stat-label">Empréstimos Ativos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏰</div>
+                            <div class="stat-number" id="pending-requests">0</div>
+                            <div class="stat-label">Solicitações Pendentes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">❌</div>
+                            <div class="stat-number" id="rejected-requests">0</div>
+                            <div class="stat-label">Solicitações Rejeitadas</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan Request Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Solicitar Empréstimo</h3>
+                <p class="card-description">Preencha seus dados para solicitar o livro</p>
+            </div>
+            <div class="modal-content">
+                <form id="loan-form">
+                    <div class="form-group">
+                        <label class="form-label" for="student-name">Nome Completo *</label>
+                        <input type="text" class="form-input" id="student-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-id">Número de Matrícula *</label>
+                        <input type="text" class="form-input" id="student-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-email">Email</label>
+                        <input type="email" class="form-input" id="student-email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="student-phone">Telefone</label>
+                        <input type="tel" class="form-input" id="student-phone">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+                <button class="btn btn-primary" onclick="submitLoanRequest()">Confirmar Solicitação</button>
+            </div>
+        </div>
+    </div>
+                
 </div>
 
 <script>
@@ -923,6 +992,7 @@
 </body>
 
 </html>
+
 
 
 
